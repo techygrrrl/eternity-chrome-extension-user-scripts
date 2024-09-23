@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { useDarkMode } from '@hooks/use-dark-mode.js'
 import { assert } from '@blackglory/prelude'
 import { useMount } from 'extra-react-hooks'
+import { cmykTheme, draculaTheme } from '@src/utils/themes.js'
 
 interface IMonacoEditorProps {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>
@@ -28,12 +29,19 @@ export function MonacoEditor(
     const container = containerRef.current
     assert(container)
 
+    // Globally applied theme
+    monaco.editor.defineTheme('cmyk', cmykTheme)
+    monaco.editor.defineTheme('dracula', draculaTheme)
+    // Theme to use for the new editor
+    const customTheme = 'cmyk'
+
     const editor = monaco.editor.create(
       container
     , {
         language: 'javascript'
       , minimap: { enabled: false }
       , tabSize: 2
+      , theme: customTheme
       , wordWrap: 'on'
       , scrollBeyondLastLine: false
       , automaticLayout: true
@@ -50,7 +58,7 @@ export function MonacoEditor(
     }
   })
 
-  useEffect(() => {
+  /* useEffect(() => {
     const editor = editorRef.current
     assert(editor)
 
@@ -59,7 +67,7 @@ export function MonacoEditor(
            ? 'vs-dark'
            : 'vs'
     })
-  }, [isDarkMode])
+  }, [isDarkMode]) */
 
   useEffect(() => {
     const editor = editorRef.current
